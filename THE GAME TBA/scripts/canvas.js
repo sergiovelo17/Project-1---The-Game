@@ -44,15 +44,15 @@ class MapCanvas{
   clearEnemy(enemy){
     this.ctx.clearRect(enemy.x,enemy.y,enemy.width,enemy.height);
   }
-  drawEnemy(enemy){
-    this.ctx.fillStyle = "#ff0000";
-    this.ctx.fillRect(enemy.x,enemy.y,enemy.width,enemy.height);
+  drawEnemy(img,enemy){
+    // this.ctx.fillStyle = "#ff0000";
+    this.ctx.drawImage(img,enemy.x,enemy.y,enemy.width,enemy.height);
   }
   drawMap(){
     
     this.ctx.clearRect(0, 0, 750, 600);
-    this.ctx.globalAlpha = 0.01;
-    this.ctx.lineWidth = 7;
+    this.ctx.globalAlpha = 1;
+    this.ctx.lineWidth = 8;
     this.ctx.beginPath();
     this.ctx.strokeStyle = "#ff0000";
     this.ctx.fillStyle = "#ff0000";
@@ -114,6 +114,8 @@ class MapCanvas{
     this.ctx.lineTo(400,255);
     this.ctx.lineTo(330,255);
     this.ctx.lineTo(330,190);
+    this.ctx.moveTo(220,425);
+    this.ctx.lineTo(210,425);
     this.ctx.stroke();
     this.ctx.moveTo(510,189);
     this.ctx.fillRect(500,189,15,230);
@@ -123,17 +125,19 @@ class MapCanvas{
   clearUser(x,y,width,height){
     this.ctx.clearRect(x,y,width,height);
   }
-  drawUser(x,y,width,height){
+  drawUser(img,x,y,width,height){
     // this.ctx.drawImage(img,x,y,width,height);
     this.ctx.globalAlpha = 1;
     // let playerImage = new Image();
+    // playerImage.crossOrigin = "Anonymous";
     // playerImage.src = img;
-    // this.ctx.drawImage(playerImage,x,y,width,height);
-    this.ctx.fillStyle = "#FFFFFF";
-    this.ctx.fillRect(x,y,width,height);
+    this.ctx.drawImage(img,x,y,width,height);
+    // this.ctx.fillStyle = "#FFFFFF";
+    // this.ctx.fillRect(x,y,width,height);
   }
 
   detectLine(x, y) {
+    // console.log("Detect line function called")
     var imageData = this.ctx.getImageData(0, 0, 750, 600),
         inputData = imageData.data,
         pData = (~~x + (~~y * 750)) * 4;

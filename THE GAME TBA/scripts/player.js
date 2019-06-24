@@ -2,6 +2,12 @@ class Player extends Person {
   constructor() {
     super(550, 500, 100, 100);
     this.keyAcquired = false;
+    this.currImageOfUser = 4;
+    this.playerMovingRight = [];
+    this.playerMovingLeft = [];
+    this.playerMovingUp = [];
+    this.playerMovingDown = [];
+    this.playerShooting = [];
   }
 
   gotKey(theCanvas) {
@@ -14,39 +20,113 @@ class Player extends Person {
       this.keyAcquired = true;
     }
   }
+  createPlayerMovingRight(url) {
+    let playerImage = new Image();
+    playerImage.crossOrigin = "Anonymous";
+    playerImage.src = url;
+    this.playerMovingRight.push(playerImage);
+  }
+  createPlayerMovingLeft(url) {
+    let playerImage = new Image();
+    playerImage.crossOrigin = "Anonymous";
+    playerImage.src = url;
+    this.playerMovingLeft.push(playerImage);
+  }
+  createPlayerMovingDown(url) {
+    let playerImage = new Image();
+    playerImage.crossOrigin = "Anonymous";
+    playerImage.src = url;
+    this.playerMovingDown.push(playerImage);
+  }
+  createPlayerMovingUp(url) {
+    let playerImage = new Image();
+    playerImage.crossOrigin = "Anonymous";
+    playerImage.src = url;
+    this.playerMovingUp.push(playerImage);
+  }
+  createPlayerShooting(url){
+    let playerImage = new Image();
+    playerImage.crossOrigin = "Anonymous";
+    playerImage.src = url;
+    this.playerShooting.push(playerImage);
+  }
   moveYourSelf(key, theCanvas, myGame) {
     // if(!theCanvas.detectLine(this.x,this.y)){
     theCanvas.clearUser(this.x, this.y, this.width, this.height);
     if (key === "ArrowDown") {
-      if (!theCanvas.detectLine(this.x, this.y + 21)) {
+      if (!theCanvas.detectLine(this.x, this.y + 35)) {
         myGame.lastArrowPressed = "S";
-        this.y += 7;
+        this.y += 10;
       }
+      let indexOfImage = this.currImageOfUser % 4;
+      theCanvas.drawUser(
+        this.playerMovingDown[indexOfImage],
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+      this.currImageOfUser++;
     }
     if (key === "ArrowUp") {
-      if (!theCanvas.detectLine(this.x, this.y - 7)) {
+      if (!theCanvas.detectLine(this.x, this.y - 10)) {
         // && !theCanvas.detectLine(this.x+7, this.y - 7) && !theCanvas.detectLine(this.x-7, this.y - 7))
         myGame.lastArrowPressed = "N";
-        this.y -= 7;
+        this.y -= 10;
       }
+      let indexOfImage = this.currImageOfUser % 4;
+      theCanvas.drawUser(
+        this.playerMovingUp[indexOfImage],
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+      this.currImageOfUser++;
     }
     if (key === "ArrowRight") {
-      if (!theCanvas.detectLine(this.x + 21, this.y)) {
+      if (!theCanvas.detectLine(this.x + 35, this.y)) {
         myGame.lastArrowPressed = "E";
-        this.x += 7;
+        this.x += 10;
       }
+      let indexOfImage = this.currImageOfUser % 4;
+      theCanvas.drawUser(
+        this.playerMovingRight[indexOfImage],
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+      this.currImageOfUser++;
     }
     if (key === "ArrowLeft") {
-      if (!theCanvas.detectLine(this.x - 7, this.y)) {
+      if (!theCanvas.detectLine(this.x - 10, this.y)) {
         myGame.lastArrowPressed = "W";
-        this.x -= 7;
+        this.x -= 10;
       }
+      let indexOfImage = this.currImageOfUser % 4;
+      theCanvas.drawUser(
+        this.playerMovingLeft[indexOfImage],
+        this.x,
+        this.y,
+        this.width,
+        this.height
+      );
+      this.currImageOfUser++;
     }
     // theCanvas.walls.forEach((theWall)=>{
     //   if(this.x > theWall.start.x && )
     // })
 
     // }
-    theCanvas.drawUser(this.x, this.y, this.width, this.height);
+    // let indexOfImage = this.currImageOfUser % 4;
+    // theCanvas.drawUser(
+    //   this.playerMovingRight[indexOfImage],
+    //   this.x,
+    //   this.y,
+    //   this.width,
+    //   this.height
+    // );
+    // this.currImageOfUser++;
   }
 }
