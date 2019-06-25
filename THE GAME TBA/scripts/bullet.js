@@ -1,5 +1,5 @@
 class Bullet {
-  constructor(xcord, ycord, direction) {
+  constructor(xcord, ycord, direction,whoShotMe) {
     this.x = xcord;
     this.y = ycord;
     this.direction = direction;
@@ -10,14 +10,20 @@ class Bullet {
     let index = allBullets.indexOf(this);
     allBullets.splice(index, 1);
   }
-  checkIfUserIsHit(user,theCanvas){
+  checkIfUserIsHit(user,theCanvas,myGame){
     if (
       this.x < user.x + user.width &&
       this.x + this.width > user.x &&
       this.y < user.y + user.height &&
       this.y + this.height > user.y
     ) {
-      theEnemy.health -= 5;
+      let health = document.getElementById("health")
+      health.value -= 10;
+      user.health -= 10;
+      console.log(user.health);
+    }
+    if(user.health <= 0){
+      myGame.gameOver();
     }
   }
   checkHit(enemyArr,theCanvas) {
@@ -57,7 +63,7 @@ class Bullet {
       }
     });
   }
-  drawEnemyBullet(theCanvas, enemyBullets, theUser){
+  drawEnemyBullet(theCanvas, enemyBullets, theUser, myGame){
     theCanvas.clearBullet(this);
     if (this.direction === "N") {
       if (!theCanvas.detectLine(this.x, this.y - 5)) {
@@ -65,27 +71,27 @@ class Bullet {
         theCanvas.drawBullet(this);
       } else {
         this.y -= 5;
-        this.checkIfUserIsHit(theUser,theCanvas);
+        this.checkIfUserIsHit(theUser,theCanvas,myGame);
         this.bulletCollision(enemyBullets);
       }
     }
     if (this.direction === "S") {
-      if (!theCanvas.detectLine(this.x, this.y + 5)) {
-        this.y += 5;
+      if (!theCanvas.detectLine(this.x, this.y + 6)) {
+        this.y += 6;
         theCanvas.drawBullet(this);
       } else {
-        this.y += 5;
-        this.checkIfUserIsHit(theUser,theCanvas);
+        this.y += 6;
+        this.checkIfUserIsHit(theUser,theCanvas,myGame);
         this.bulletCollision(enemyBullets);
       }
     }
     if (this.direction === "E") {
-      if (!theCanvas.detectLine(this.x + 5, this.y)) {
-        this.x += 5;
+      if (!theCanvas.detectLine(this.x + 6, this.y)) {
+        this.x += 6;
         theCanvas.drawBullet(this);
       } else {
-        this.x += 5;
-        this.checkIfUserIsHit(theUser,theCanvas);
+        this.x += 6;
+        this.checkIfUserIsHit(theUser,theCanvas, myGame);
         this.bulletCollision(enemyBullets);
       }
     }
@@ -95,7 +101,7 @@ class Bullet {
         theCanvas.drawBullet(this);
       } else {
         this.x -= 5;
-        this.checkIfUserIsHit(theUser,theCanvas);
+        this.checkIfUserIsHit(theUser,theCanvas, myGame);
         this.bulletCollision(enemyBullets);
       }
     }
@@ -106,7 +112,7 @@ class Bullet {
     theCanvas.clearBullet(this);
     if (this.direction === "N") {
       if (!theCanvas.detectLine(this.x, this.y - 4)) {
-        this.y -= 5;
+        this.y -= 4;
         theCanvas.drawBullet(this);
       } else {
         this.y -= 4;
@@ -115,28 +121,28 @@ class Bullet {
       }
     }
     if (this.direction === "S") {
-      if (!theCanvas.detectLine(this.x, this.y + 4)) {
+      if (!theCanvas.detectLine(this.x, this.y + 5)) {
         this.y += 5;
         theCanvas.drawBullet(this);
       } else {
-        this.y += 4;
+        this.y += 5;
         this.checkHit(theEnemies,theCanvas);
         this.bulletCollision(allBullets);
       }
     }
     if (this.direction === "E") {
-      if (!theCanvas.detectLine(this.x + 4, this.y)) {
+      if (!theCanvas.detectLine(this.x + 5, this.y)) {
         this.x += 5;
         theCanvas.drawBullet(this);
       } else {
-        this.x += 4;
+        this.x += 5;
         this.checkHit(theEnemies,theCanvas);
         this.bulletCollision(allBullets);
       }
     }
     if (this.direction === "W") {
       if (!theCanvas.detectLine(this.x - 4, this.y)) {
-        this.x -= 5;
+        this.x -= 4;
         theCanvas.drawBullet(this);
       } else {
         this.x -= 4;

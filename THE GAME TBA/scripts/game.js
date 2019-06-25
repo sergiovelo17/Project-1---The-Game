@@ -1,22 +1,26 @@
 window.onload = function() {
+  $('#prepare-player').toggle();
+  $('#game-screen').toggle();
+  $('#game-over').toggle();
   class Game {
     constructor() {
       this.theCanvas = new MapCanvas();
       this.user = new Player();
       this.enemies = [
-        new Enemy(150, 150, 10, 10, 4),
-        new Enemy(280, 150, 10, 10, 4),
-        new Enemy(50, 250, 10, 10, 4),
-        new Enemy(350, 300, 10, 10, 5),
-        new Enemy(490, 160, 10, 10, 4),
-        new Enemy(360, 380, 10, 10, 0),
-        new Enemy(155, 500, 10, 10, 4)
+        new Enemy(150, 150, 20, 20, 4),
+        new Enemy(280, 150, 20, 20, 4),
+        new Enemy(50, 250, 20, 20, 4),
+        new Enemy(350, 300, 20, 20, 5),
+        new Enemy(490, 160, 20, 20, 4),
+        new Enemy(360, 380, 20, 20, 0),
+        new Enemy(155, 500, 20, 20, 4)
       ];
       this.bullets = [];
       this.enemyBullets = [];
       this.lastArrowPressed = "N";
       this.bulletCordinateX = 1;
       this.bulletCordinateY = 1;
+      this.currentMapId;
     }
 
     drawGame() {
@@ -26,16 +30,16 @@ window.onload = function() {
     playerShoot(){
       if(this.lastArrowPressed === "N"){
         this.theCanvas.clearUser(this.user.x,this.user.y,this.user.width,this.user.height);
-        this.theCanvas.drawUser(this.user.playerShooting[0],this.user.x,this.user.y,this.user.width,this.user.height);
+        this.theCanvas.drawUser(this.user.playerShooting[0],this.user);
       }else  if(this.lastArrowPressed === "S"){
         this.theCanvas.clearUser(this.user.x,this.user.y,this.user.width,this.user.height);
-        this.theCanvas.drawUser(this.user.playerShooting[1],this.user.x,this.user.y,this.user.width,this.user.height);
+        this.theCanvas.drawUser(this.user.playerShooting[1],this.user);
       }else  if(this.lastArrowPressed === "E"){
         this.theCanvas.clearUser(this.user.x,this.user.y,this.user.width,this.user.height);
-        this.theCanvas.drawUser(this.user.playerShooting[2],this.user.x,this.user.y,this.user.width,this.user.height);
+        this.theCanvas.drawUser(this.user.playerShooting[2],this.user);
       }else{
         this.theCanvas.clearUser(this.user.x,this.user.y,this.user.width,this.user.height);
-        this.theCanvas.drawUser(this.user.playerShooting[3],this.user.x,this.user.y,this.user.width,this.user.height);
+        this.theCanvas.drawUser(this.user.playerShooting[3],this.user);
       }
     }
 
@@ -69,47 +73,59 @@ window.onload = function() {
       }
     }
 
+    gameOver(){
+      $('#game-screen').toggle();
+      $('#game-over').toggle();
+      this.user = undefined;
+
+    }
+
     isWinner() {
       if (
         this.user.keyAcquired === true &&
         this.user.x > 130 &&
-        this.user.x < 140 &&
-        this.user.y < 150 &&
-        this.user.y > 135
+        this.user.x < 160 &&
+        this.user.y < 160 &&
+        this.user.y > 130
       ) {
         return true;
       }
       return false;
     }
-    generateRandomEnemyShooting(){
-     setInterval(()=>{
-      this.enemies.forEach((theEnemy)=>{
-        let randomNum = Math.floor(Math.random() * 100);
-        this.enemyBulletCoordinates(theEnemy);
-        if(randomNum === 5){
-          let currBullet = new Bullet(
-            theEnemy.enemyBulletCordX,
-            theEnemy.enemyBulletCordY,
-            theEnemy.currDirection
-          );
-          this.enemyBullets.push(currBullet);
-        }
-        console.log(this.enemyBullets)
-      }, 10000)
-     })
-    }
+    // generateRandomEnemyShooting(){
+    //  setInterval(()=>{
+    //   this.enemies.forEach((theEnemy)=>{
+    //     let randomNum = Math.floor(Math.random() * 100);
+    //     this.enemyBulletCoordinates(theEnemy);
+    //     if(randomNum === 5){
+    //       let currBullet = new Bullet(
+    //         theEnemy.enemyBulletCordX,
+    //         theEnemy.enemyBulletCordY,
+    //         theEnemy.currDirection
+    //       );
+    //       this.enemyBullets.push(currBullet);
+    //     }
+    //   }, 10000)
+    //  })
+    // }
     createEnemies(){
       this.enemies.forEach(theEnemy => {
         theEnemy.drawSelf(this.theCanvas, this);
       });
     }
     animate() {
+      let num = 0;
       setInterval(() => {
+        if(num % 15 === 0){
+          this.theCanvas.drawMap();
+          this.theCanvas.drawUser(this.user.lastUserImage,this.user);
+        }
         this.enemies.forEach(theEnemy => {
-          theEnemy.drawSelf(this.theCanvas, this);
+          theEnemy.drawSelf(this.theCanvas, this.user, this);
         });
         this.theCanvas.drawKey(myGame.user);
-      }, 50);
+        num++;
+      }, 100);
     }
     shoot() {
       setInterval(() => {
@@ -121,7 +137,7 @@ window.onload = function() {
     enemyShoot(){
       setInterval(() => {
         this.enemyBullets.forEach(theBullet => {
-          theBullet.drawEnemyBullet(this.theCanvas, this.enemyBullets, this.user);
+          theBullet.drawEnemyBullet(this.theCanvas, this.enemyBullets, this.user, this);
         });
       }, 20);
     }
@@ -243,6 +259,11 @@ window.onload = function() {
     }
   }
 
+  $('#user-is-ready').click(()=>{
+    let usersName = $('#userName')[0].value;
+    $('#Players-name')[0].innerHTML = usersName;
+  });
+
   $(document).keydown(function(e) {
     let directions = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
 
@@ -258,6 +279,7 @@ window.onload = function() {
 
     if (e.code === "Space") {
       e.preventDefault();
+      if(myGame.bullets.length < 2){
       myGame.playerShoot();
       myGame.bulletCordinateX = myGame.user.x;
       myGame.bulletCordinateY = myGame.user.y;
@@ -268,18 +290,22 @@ window.onload = function() {
         myGame.lastArrowPressed
       );
       myGame.bullets.push(currBullet);
-      console.log(myGame.bullets);
+      }
     }
   });
-
+  $('#start-game').click(()=>{
+  $('#starting-page').toggle();
+  $('#prepare-player').toggle();
+  });
+  $('#user-is-ready').click(()=>{
+    $('#prepare-player').toggle();
+    $('#game-screen').toggle(); 
+    })
   let myGame = new Game();
   myGame.drawGame();
-
   myGame.createEveryoneMovement();
-  myGame.user.moveYourSelf("w", myGame.theCanvas);
   myGame.theCanvas.drawKey(myGame.user);
   myGame.animate();
   myGame.shoot();
-  myGame.generateRandomEnemyShooting();
   myGame.enemyShoot();
 };

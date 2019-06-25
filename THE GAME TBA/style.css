@@ -26,12 +26,18 @@ body {
   align-content: center;
   height: 600px;
 }
-.start-game{
+#start-game{
   height:100px;
   width: 400px;
   font-size: 40px;
   align-self: center;
 }
+#starting-page{
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+}
+
 #prepare-player{
   display: flex;
   justify-content: space-between;
@@ -87,6 +93,11 @@ body {
 }
 #map{
   background-image: url(./img/map2forgame.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#map2{
+  background-image: url(./img/mapfreightforIronhackGame.jpeg);
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -96,5 +107,27 @@ body {
   background-repeat: no-repeat;
   height: 80px;
   background-size: cover;
-  width: 96.75%;
+  width: 100%;
+  justify-content: space-around;
+}
+#health{
+  align-self: center;
+  width: 200px;
+  height: 50px;
+  background-color: red;
+}
+#Players-name{
+  align-self: center;
+}
+#game-over{
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 40px;
+  align-content: space-around;
+  justify-content: center;
+  margin: 0 60px;
+}
+#game-over *{
+  color: red;
+  align-self: center;
 }
